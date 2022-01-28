@@ -1,16 +1,32 @@
 //import { render } from '@testing-library/react';
 import React, { Component } from 'react';
 import './App.css';
+import SearchBar from './SearchBar/SearchBar';
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
+    constructor() {
+        super();
+        this.state = {
+            search: ''
+        };
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            search: event.target.value
+        })
+    }
+
+    handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(this.state.search)
     }
 
     render() {
         return (
-            <h1>our Youtube Project</h1>
+            <div>
+                <SearchBar handleChange={this.handleChange} search={this.state.search} handleSubmit={this.handleSubmit} />
+            </div>
         )
     }
 }
