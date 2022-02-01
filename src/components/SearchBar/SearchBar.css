@@ -1,0 +1,14 @@
+.navbar {
+  background-color: rgba(247, 248, 241, 0.808);
+}
+
+input {
+  border-radius: 8px;
+  color: black;
+  border-color: #00000063;
+}
+
+input:focus {
+  outline: none;
+  border: solid black;
+}

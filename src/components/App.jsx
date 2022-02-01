@@ -1,8 +1,10 @@
-//import { render } from '@testing-library/react';
 import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 import SearchBar from './SearchBar/SearchBar';
+import VideoPlayer from './VideoPlayer/VideoPlayer';
+import APIKey from '../APIKey';
+
 
 class App extends Component {
     constructor() {
@@ -43,6 +45,7 @@ class App extends Component {
         return (
             <div>
                 <SearchBar handleChange={this.handleChange} search={this.state.search} handleSubmit={this.handleSubmit} />
+                < VideoPlayer />
             </div>
         )
     }
