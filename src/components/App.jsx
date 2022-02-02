@@ -4,13 +4,17 @@ import './App.css';
 import SearchBar from './SearchBar/SearchBar';
 import VideoPlayer from './VideoPlayer/VideoPlayer';
 import APIKey from '../APIKey';
+import SearchResults from './SearchResults/SearchResults';
+import key from '../APIKey';
 
 
 class App extends Component {
     constructor() {
         super();
         this.state = {
-            search: ''
+            search: '',
+            hasSearched: false,
+            searchResults: []
         };
     }
 
@@ -22,10 +26,13 @@ class App extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+        this.setState({
+            hasSearched: true
+        })
+        this.getSearchResults(this.state.search, key)
         console.log(this.state.search)
     }
 
-    //HTTP Requests
     ////GET Initial Test
     getInit = async () => {
         await axios
@@ -35,10 +42,35 @@ class App extends Component {
             })
     };
 
+    //HTTP Requests 
+    //get search results from Youtube
+    getSearchResults = async (search, key) => {
+        await axios
+            .get(`https://www.googleapis.com/youtube/v3/search?q=${search}&type=video&key=${key}`)
+            .then((res) => {
+                let data = this.extractData(res.data);
+                this.setState({
+                    searchResults: data
+                })
+                console.log(data[0])
+            })
+    }
+
     //Run When Component Initially Mounts
     componentDidMount() {
         this.getInit();
     };
+
+    //functions 
+    //extract data from Youtube API
+    extractData = (data) => {
+        let extractedData = data.items.map((el) => {
+            let temp = el.id.videoId
+            return temp
+        })
+        return extractedData
+    }
+
 
     //Render
     render() {
@@ -46,6 +78,7 @@ class App extends Component {
             <div>
                 <SearchBar handleChange={this.handleChange} search={this.state.search} handleSubmit={this.handleSubmit} />
                 < VideoPlayer />
+                <SearchResults hasSearched={this.state.hasSearched} />
             </div>
         )
     }
