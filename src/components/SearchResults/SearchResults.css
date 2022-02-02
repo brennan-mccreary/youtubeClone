@@ -1,0 +1,9 @@
+.video-card {
+  width: 15vw;
+  min-width: 360px;
+}
+
+.video-card-container {
+  text-align: center;
+  display: flex;
+}

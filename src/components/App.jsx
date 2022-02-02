@@ -53,7 +53,7 @@ class App extends Component {
                 this.setState({
                     searchResults: data
                 })
-                
+
 
             })
     }
@@ -62,10 +62,10 @@ class App extends Component {
     getSearchResultData = async (id, key) => {
         let data;
         await axios
-        .get(`https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${key}&fields=items(id,snippet(channelTitle,title,description,thumbnails))&part=snippet`)
-        .then((res) => {
-            data = res.data.items
-        })
+            .get(`https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${key}&fields=items(id,snippet(channelTitle,title,description,thumbnails))&part=snippet`)
+            .then((res) => {
+                data = res.data.items
+            })
         return data;
     }
 
@@ -87,7 +87,7 @@ class App extends Component {
     //Format search result data coming back from API
     formatData = async (data) => {
         let formattedData = [];
-        for(let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
             formattedData[i] = await this.getSearchResultData(data[i], key)
         };
 
@@ -103,7 +103,7 @@ class App extends Component {
             <div>
                 <SearchBar handleChange={this.handleChange} search={this.state.search} handleSubmit={this.handleSubmit} />
                 < VideoPlayer />
-                <SearchResults hasSearched={this.state.hasSearched} />
+                <SearchResults data={this.state.searchResultsData} searchResults={this.state.searchResults} />
             </div>
         )
     }
