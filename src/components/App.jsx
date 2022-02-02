@@ -3,7 +3,6 @@ import axios from 'axios';
 import './App.css';
 import SearchBar from './SearchBar/SearchBar';
 import VideoPlayer from './VideoPlayer/VideoPlayer';
-import APIKey from '../APIKey';
 import SearchResults from './SearchResults/SearchResults';
 import key from '../APIKey';
 
@@ -14,7 +13,8 @@ class App extends Component {
         this.state = {
             search: '',
             hasSearched: false,
-            searchResults: []
+            searchResults: [],
+            searchResultsData: []
         };
     }
 
@@ -49,11 +49,24 @@ class App extends Component {
             .get(`https://www.googleapis.com/youtube/v3/search?q=${search}&type=video&key=${key}`)
             .then((res) => {
                 let data = this.extractData(res.data);
+                this.formatData(data);
                 this.setState({
                     searchResults: data
                 })
-                console.log(data[0])
+                
+
             })
+    }
+
+    //GET data for each search result
+    getSearchResultData = async (id, key) => {
+        let data;
+        await axios
+        .get(`https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${key}&fields=items(id,snippet(channelTitle,title,description,thumbnails))&part=snippet`)
+        .then((res) => {
+            data = res.data.items
+        })
+        return data;
     }
 
     //Run When Component Initially Mounts
@@ -70,6 +83,18 @@ class App extends Component {
         })
         return extractedData
     }
+
+    //Format search result data coming back from API
+    formatData = async (data) => {
+        let formattedData = [];
+        for(let i = 0; i < data.length; i++) {
+            formattedData[i] = await this.getSearchResultData(data[i], key)
+        };
+
+        this.setState({
+            searchResultsData: formattedData
+        })
+    };
 
 
     //Render
