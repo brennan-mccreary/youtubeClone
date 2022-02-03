@@ -14,7 +14,8 @@ class App extends Component {
             search: '',
             hasSearched: false,
             searchResults: [],
-            searchResultsData: []
+            searchResultsData: [],
+            selectedVideo: null
         };
     }
 
@@ -31,6 +32,14 @@ class App extends Component {
         })
         this.getSearchResults(this.state.search, key)
         console.log(this.state.search)
+    }
+
+    handleClickCard = (event) => {
+        let index = event.target.parentElement.id;
+        this.setState({
+            selectedVideo: this.state.searchResultsData[index]
+        })
+        document.getElementById("search-results").hidden = true
     }
 
     ////GET Initial Test
@@ -102,8 +111,8 @@ class App extends Component {
         return (
             <div>
                 <SearchBar handleChange={this.handleChange} search={this.state.search} handleSubmit={this.handleSubmit} />
-                < VideoPlayer />
-                <SearchResults data={this.state.searchResultsData} searchResults={this.state.searchResults} />
+                <SearchResults data={this.state.searchResultsData} searchResults={this.state.searchResults} handleClick={this.handleClickCard} />
+                < VideoPlayer video={this.state.selectedVideo} />
             </div>
         )
     }
