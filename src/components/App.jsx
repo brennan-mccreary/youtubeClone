@@ -101,12 +101,24 @@ class App extends Component {
         return data;
     }
 
+    //GET data for each related video
+    getRelatedVideosData = async (id, key) => {
+        let data;
+        await axios
+            .get(`https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${key}&fields=items(id,snippet(channelTitle,title,description,thumbnails))&part=snippet`)
+            .then((res) => {
+                data = res.data.items
+            })
+        return data;
+    }
+
+
     //Run When Component Initially Mounts
     componentDidMount() {
         this.getInit();
     };
 
-    //functions
+    //FUNCTIONS
     //extract data from Youtube API
     extractData = (data) => {
         let extractedData = data.items.map((el) => {
