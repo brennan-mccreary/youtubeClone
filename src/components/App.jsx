@@ -7,6 +7,7 @@ import SearchResults from './SearchResults/SearchResults';
 import key from '../APIKey';
 import RelatedVideos from './RelatedVideos/RelatedVideos';
 import Test from './Test/Test';
+import Comments from './Comments/Comments';
 
 
 class App extends Component {
@@ -16,6 +17,7 @@ class App extends Component {
             search: '', //user inputted search term
             searchResults: [], //search results and data from youtube
             relatedVideos: [],
+            comments: [],
             selectedVideo: null
         };
     }
@@ -42,7 +44,6 @@ class App extends Component {
         event.preventDefault();
 
         this.getSearchResults(this.state.search, key)
-        console.log(this.state.search)
     }
 
     //Handle video card being clicked
@@ -52,8 +53,8 @@ class App extends Component {
             selectedVideo: this.state.searchResults[index]
         })
 
-        console.log(this.state.searchResults[index]);
-
+        console.log(this.state.searchResults[index].id.videoId);
+        this.getCommentsByVideoId(this.state.searchResults[index].id.videoId);
         this.getRelatedVideos(this.state.searchResults[index].id.videoId, key);
     }
 
@@ -65,8 +66,8 @@ class App extends Component {
             selectedVideo: this.state.relatedVideos[index]
         })
 
-        console.log(this.state.relatedVideos[index]);
-
+        console.log(this.state.relatedVideos[index].id.videoId);
+        this.getCommentsByVideoId(this.state.relatedVideos[index].id.videoId);
         this.getRelatedVideos(this.state.relatedVideos[index].id.videoId, key);
     }
 
@@ -82,7 +83,6 @@ class App extends Component {
                 this.setState({
                     searchResults: data
                 })
-                console.log(data);
             })
     }
 
@@ -95,11 +95,76 @@ class App extends Component {
                     this.setState({
                         relatedVideos: data
                     })
-                    console.log(data);
+
                 })
     }
 
+    //GET comments for video by id
+    getCommentsByVideoId = async (id) => {
+        await axios 
+                .get(`http://localhost:5002/api/comments/fetch/${id}`)
+                .then((res) => {
+                    console.log(id);
+                    console.log(res.data);
+                    this.setState({
+                        comments: res.data
+                    });
+                })
+    }    
 
+    //POST Comment
+    postComment = async (comment) => {
+        await axios 
+                .get('http://localhost:5002/api/comments/add', comment)
+                .then((res) => {
+                    this.setState({
+                        comments: [...prevState.comments, res.data]
+                    });
+                })
+    }
+
+    //PUT Like
+    putLike = async (id) => {
+        await axios
+                .get(`http://localhost:5002/api/comments/like/${id}`)
+                .then((res) => {
+                    let target = [...this.state.comments];
+                    let index = target.findIndex(el => res.data._id === this.state.comments[el]._id);
+                    target[index] = res.data;
+                    this.setState({
+                        comments: target
+                    });
+                })
+    }
+
+    //PUT Dislike
+    putDislike = async (id) => {
+        await axios
+                .get(`http://localhost:5002/api/comments/dislike/${id}`)
+                .then((res) => {
+                    let target = [...this.state.comments];
+                    let index = target.findIndex(el => res.data._id === this.state.comments[el]._id);
+                    target[index] = res.data;
+                    this.setState({
+                        comments: target
+                    });
+                })
+    }
+
+    //POST Reply
+    postReplyToComment = async (id, reply) => {
+        await axios
+                .get(`http://localhost:5002/api/comments/reply/${id}`, reply)
+                .then((res) => {
+                    let target = [...this.state.comments];
+                    let index = target.findIndex(el => res.data._id === this.state.comments[el]._id);
+                    target[index] = res.data;
+                    this.setState({
+                        comments: target
+                    });
+                })
+    }
+    
     //Functions
     checkDataIntegrity = (data) => {
         for(let i = 0; i < data.length; i++) {
@@ -124,6 +189,7 @@ class App extends Component {
                 <SearchResults searchResults={this.state.searchResults} handleClick={this.handleClickCard} />
                 <VideoPlayer video={this.state.selectedVideo}/>
                 <RelatedVideos relatedVideos={this.state.relatedVideos} handleClick={this.handleClickRelatedCard}/>
+                <Comments comments={this.state.comments}/>
                 <Test/>
             </div>
         )
