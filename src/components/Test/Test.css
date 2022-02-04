@@ -1,3 +1,7 @@
 .video-card {
   text-align: center;
 }
+
+.top-level {
+  border: 2px solid;
+}

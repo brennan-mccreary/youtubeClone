@@ -11,3 +11,7 @@
   flex-direction: row;
   padding: 1rem;
 }
+
+.top-level {
+  border: 2px solid;
+}
