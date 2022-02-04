@@ -5,6 +5,7 @@ import SearchBar from './SearchBar/SearchBar';
 import VideoPlayer from './VideoPlayer/VideoPlayer';
 import SearchResults from './SearchResults/SearchResults';
 import key from '../APIKey';
+import RelatedVideos from './RelatedVideos/RelatedVideos';
 
 
 class App extends Component {
@@ -15,16 +16,30 @@ class App extends Component {
             hasSearched: false,
             searchResults: [],
             searchResultsData: [],
-            selectedVideo: null
+            relatedVideos: [],
+            relatedVideosData: [],
+            selectedVideoData: null,
+            videoSelected: false
         };
     }
+    ////GET Initial Test
+        getInit = async () => {
+            await axios
+                .get('http://localhost:5002/')
+                .then((res) => {
+                    console.log(res.data);
+                })
+        };
 
+    ////HANDLERS
+    //update search bar 
     handleChange = (event) => {
         this.setState({
             search: event.target.value
         })
     }
 
+    //handle submission of search result
     handleSubmit = (event) => {
         event.preventDefault();
         this.setState({
@@ -34,25 +49,22 @@ class App extends Component {
         console.log(this.state.search)
     }
 
+    //Handle video card being clicked
     handleClickCard = (event) => {
         let index = event.target.parentElement.id;
         this.setState({
-            selectedVideo: this.state.searchResultsData[index]
+            selectedVideoData: this.state.searchResultsData[index],
+            videoSelected: true
         })
         document.getElementById("search-results").hidden = true
+
+        this.getRelatedVideos(this.state.searchResultsData[index][0].id, key);
     }
 
-    ////GET Initial Test
-    getInit = async () => {
-        await axios
-            .get('http://localhost:5002/')
-            .then((res) => {
-                console.log(res.data);
-            })
-    };
+    
 
-    //HTTP Requests 
-    //get search results from Youtube
+    //HTTP REQUESTS 
+    //GET search results from Youtube
     getSearchResults = async (search, key) => {
         await axios
             .get(`https://www.googleapis.com/youtube/v3/search?q=${search}&type=video&key=${key}`)
@@ -62,9 +74,20 @@ class App extends Component {
                 this.setState({
                     searchResults: data
                 })
-
-
             })
+    }
+
+    //GET related videos
+    getRelatedVideos = async (id, key) => {
+        await axios
+                .get(`https://www.googleapis.com/youtube/v3/search?relatedToVideoId=${id}&type=video&key=${key}`)
+                .then((res) => {
+                    let data = this.extractData(res.data);
+                    this.formatRelatedVideosData(data);
+                    this.setState({
+                        relatedVideos: data
+                    })
+                })
     }
 
     //GET data for each search result
@@ -83,14 +106,27 @@ class App extends Component {
         this.getInit();
     };
 
-    //functions 
+    //functions
     //extract data from Youtube API
     extractData = (data) => {
         let extractedData = data.items.map((el) => {
             let temp = el.id.videoId
             return temp
         })
-        return extractedData
+        return extractedData;
+    }
+
+    //Format data for related videos coming back from API
+    formatRelatedVideosData = async (data) => {
+        let formattedData = [];
+        for(let i = 0; i< data.length; i++) {
+            formattedData[i] = await this.getRelatedVideosData(data[i], key)
+        }
+
+        console.log(formattedData);
+        this.setState({
+            relatedVideosData: formattedData
+        })
     }
 
     //Format search result data coming back from API
@@ -112,7 +148,8 @@ class App extends Component {
             <div>
                 <SearchBar handleChange={this.handleChange} search={this.state.search} handleSubmit={this.handleSubmit} />
                 <SearchResults data={this.state.searchResultsData} searchResults={this.state.searchResults} handleClick={this.handleClickCard} />
-                < VideoPlayer video={this.state.selectedVideo} />
+                <VideoPlayer video={this.state.selectedVideoData}/>
+                <RelatedVideos data={this.state.relatedVideosData} videoSelected={this.state.videoSelected}/>
             </div>
         )
     }
