@@ -14,7 +14,6 @@ const Test = () => {
                                     <h5 className="card-title">hey</h5>
                                     <p className="card-text">Click the video to watch!</p>
                                 </div>
-
                                 <div className="card mb-3">
                                     <div className="card-body">
                                         <h5 className="card-title">Comments</h5>
@@ -22,12 +21,6 @@ const Test = () => {
                                         <p className="card-text">This song is my favorite!! I listen to it all the time when I code!</p>
                                     </div>
                                 </div>
-
-
-
-
-
-
                             </div>
                         </div>
                     </div>
