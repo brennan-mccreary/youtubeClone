@@ -5,6 +5,7 @@ import SearchBar from './SearchBar/SearchBar';
 import VideoPlayer from './VideoPlayer/VideoPlayer';
 import SearchResults from './SearchResults/SearchResults';
 import key from '../APIKey';
+import Test from './Test/Test';
 
 
 class App extends Component {
@@ -113,6 +114,7 @@ class App extends Component {
                 <SearchBar handleChange={this.handleChange} search={this.state.search} handleSubmit={this.handleSubmit} />
                 <SearchResults data={this.state.searchResultsData} searchResults={this.state.searchResults} handleClick={this.handleClickCard} />
                 < VideoPlayer video={this.state.selectedVideo} />
+                <Test />
             </div>
         )
     }
