@@ -1,13 +1,3 @@
-.video-card {
-  width: 15vw;
-  min-width: 360px;
-}
-
-.video-card-container {
-  height: 100%;
-  justify-content: center;
-  text-align: center;
-  display: flex;
-  flex-direction: row;
-  padding: 1rem;
-}
+/* .video-card {
+  max-width: 100%;
+} */

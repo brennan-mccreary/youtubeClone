@@ -1,14 +1,13 @@
 .navbar {
-  background-color: rgba(247, 248, 241, 0.808);
+  background-color: #f8f9fa;
 }
 
-input {
-  border-radius: 8px;
-  color: black;
-  border-color: #00000063;
+.search-icon {
+  width: 2rem;
 }
 
-input:focus {
-  outline: none;
-  border: solid black;
+.search-box {
+  border-color: blue;
+  border-radius: 10px;
+  font-family: "Verdana";
 }
