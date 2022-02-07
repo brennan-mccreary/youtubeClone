@@ -1,3 +1,12 @@
 .top-level {
     border: 2px solid;
 }
+
+.reply-box {
+    border: 2px solid;
+    
+}
+
+.reply-spacer {
+    padding-bottom: 0.5em;
+}
