@@ -1,4 +1,4 @@
-.video-card {
+/* .video-card {
   width: 15vw;
   min-width: 360px;
 }
@@ -14,4 +14,8 @@
 
 .top-level {
   border: 2px solid;
+} */
+
+.row {
+  width: 90%;
 }

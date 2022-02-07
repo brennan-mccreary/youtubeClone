@@ -1,12 +1,16 @@
 .top-level {
-    border: 2px solid;
+  border: 2px solid;
 }
 
 .reply-box {
-    border: 2px solid;
-    
+  border: 2px solid;
 }
 
-.reply-spacer {
-    padding-bottom: 0.5em;
+.comment-box {
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.button {
+  margin-left: 12rem;
 }

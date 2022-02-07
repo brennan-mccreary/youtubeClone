@@ -1,3 +1,7 @@
-.top-level {
-    border: 2px solid;
-  }
+.container {
+  border: 1px;
+}
+
+.video-content-container {
+  display: block;
+}

@@ -24,14 +24,14 @@ class App extends Component {
     }
 
     ////GET Initial Test
-        getInit = async () => {
-            await axios
-                .get('http://localhost:5002/')
-                .then((res) => {
-                    console.log(res.data);
-                })
-        };
-    
+    getInit = async () => {
+        await axios
+            .get('http://localhost:5002/')
+            .then((res) => {
+                console.log(res.data);
+            })
+    };
+
     //HTTP REQUESTS 
     //GET search results from Youtube
     getSearchResults = async (query, key) => {
@@ -48,87 +48,87 @@ class App extends Component {
     //GET related videos by id
     getRelatedVideos = async (id, key) => {
         await axios
-                .get(`https://www.googleapis.com/youtube/v3/search?relatedToVideoId=${id}&type=video&key=${key}&fields=items(id,snippet(channelTitle,title,description,thumbnails))&part=snippet`)
-                .then((res) => {
-                    const data = this.checkDataIntegrity(res.data.items)
-                    this.setState({
-                        relatedVideos: data
-                    })
-
+            .get(`https://www.googleapis.com/youtube/v3/search?relatedToVideoId=${id}&type=video&key=${key}&fields=items(id,snippet(channelTitle,title,description,thumbnails))&part=snippet`)
+            .then((res) => {
+                const data = this.checkDataIntegrity(res.data.items)
+                this.setState({
+                    relatedVideos: data
                 })
+
+            })
     }
 
     //GET comments for video by id
     getCommentsByVideoId = async (id) => {
-        await axios 
-                .get(`http://localhost:5002/api/comments/fetch/${id}`)
-                .then((res) => {
-                    console.log(id);
-                    console.log(res.data);
-                    this.setState({
-                        comments: res.data
-                    });
-                })
-    }    
+        await axios
+            .get(`http://localhost:5002/api/comments/fetch/${id}`)
+            .then((res) => {
+                console.log(id);
+                console.log(res.data);
+                this.setState({
+                    comments: res.data
+                });
+            })
+    }
 
     //POST Comment
     postComment = async (comment) => {
-        await axios 
-                .post('http://localhost:5002/api/comments/add', comment)
-                .then((res) => {
-                    this.setState(prevState => {
-                        return { comments: [...prevState.comments, res.data] }
-                    });
-                })
+        await axios
+            .post('http://localhost:5002/api/comments/add', comment)
+            .then((res) => {
+                this.setState(prevState => {
+                    return { comments: [...prevState.comments, res.data] }
+                });
+            })
     }
 
     //PUT Like
     putLike = async (id) => {
         await axios
-                .put(`http://localhost:5002/api/comments/like/${id}`)
-                .then((res) => {
-                    let target = [...this.state.comments];
-                    let index = target.findIndex((el) => res.data._id === el._id);
-                    target[index] = res.data;
-                    this.setState({
-                        comments: target
-                    });
-                })
+            .put(`http://localhost:5002/api/comments/like/${id}`)
+            .then((res) => {
+                let target = [...this.state.comments];
+                let index = target.findIndex((el) => res.data._id === el._id);
+                target[index] = res.data;
+                this.setState({
+                    comments: target
+                });
+            })
     }
 
     //PUT Dislike
     putDislike = async (id) => {
         await axios
-                .put(`http://localhost:5002/api/comments/dislike/${id}`)
-                .then((res) => {
-                    let target = [...this.state.comments];
-                    let index = target.findIndex((el) => res.data._id === el._id);
-                    target[index] = res.data;
-                    this.setState({
-                        comments: target
-                    });
-                })
+            .put(`http://localhost:5002/api/comments/dislike/${id}`)
+            .then((res) => {
+                let target = [...this.state.comments];
+                let index = target.findIndex((el) => res.data._id === el._id);
+                target[index] = res.data;
+                this.setState({
+                    comments: target
+                });
+            })
     }
 
     //POST Reply
     postReplyToComment = async (id, reply) => {
         await axios
-                .post(`http://localhost:5002/api/comments/reply/${id}`, reply)
-                .then((res) => {
-                    let target = [...this.state.comments];
-                    let index = target.findIndex(el => res.data._id === el._id);
-                    target[index] = res.data;
-                    this.setState({
-                        comments: target
-                    });
-                })
+            .post(`http://localhost:5002/api/comments/reply/${id}`, reply)
+            .then((res) => {
+                let target = [...this.state.comments];
+                let index = target.findIndex(el => res.data._id === el._id);
+                target[index] = res.data;
+                this.setState({
+                    comments: target
+                });
+            })
     }
-    
+
     //Integrity and Handler Functions
     //Check for incomplete HTTP responses
     checkDataIntegrity = (data) => {
-        for(let i = 0; i < data.length; i++) {
-            if(data[i].snippet === undefined) {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].snippet === undefined) {
                 data.splice(i, 1);
             }
         }
@@ -197,7 +197,7 @@ class App extends Component {
     handleSubmitReply = (event) => {
         event.preventDefault();
 
-        let reply = {text: this.state.replyText}
+        let reply = { text: this.state.replyText }
         let id = event.target.parentElement.id
 
         this.postReplyToComment(id, reply);
@@ -246,9 +246,10 @@ class App extends Component {
             <div>
                 <SearchBar handleChange={this.handleChange} search={this.state.search} handleSubmit={this.handleSubmit} />
                 <SearchResults searchResults={this.state.searchResults} handleClick={this.handleClickCard} />
-                <VideoPlayer video={this.state.selectedVideo}/>
-                <RelatedVideos relatedVideos={this.state.relatedVideos} handleClick={this.handleClickRelatedCard}/>
-                <Comments submitComment={this.handleSubmitComment} submitReply={this.handleSubmitReply} changeComment={this.onChangeComment} changeReply={this.onChangeReply} commentText={this.state.commentText} replyText={this.state.replyText} comments={this.state.comments} clickLike={this.handleClickLike} clickDislike={this.handleClickDislike}/>
+                <VideoPlayer video={this.state.selectedVideo} />
+                <Comments submitComment={this.handleSubmitComment} submitReply={this.handleSubmitReply} changeComment={this.onChangeComment} changeReply={this.onChangeReply} commentText={this.state.commentText} replyText={this.state.replyText} comments={this.state.comments} clickLike={this.handleClickLike} clickDislike={this.handleClickDislike} />
+                <RelatedVideos relatedVideos={this.state.relatedVideos} handleClick={this.handleClickRelatedCard} />
+
             </div>
         )
     }
